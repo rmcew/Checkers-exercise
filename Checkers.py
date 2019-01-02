@@ -9,6 +9,7 @@ Ross McEwen - January 2019
 
 import pygame, sys
 import math
+import time
 from itertools import groupby, chain
 from collections import defaultdict
 from operator import itemgetter
@@ -66,7 +67,7 @@ class Game:
 			if event.type == MOUSEBUTTONDOWN:
 				if self.board.location(*self.mouse_pos).occupant == None:
 					self.board.insert_piece(*self.mouse_pos, self.piece_color)
-					self.board.checkForWin()
+					self.board.check_win()
 					
 
 				else: 
@@ -230,38 +231,15 @@ class Board:
 
 		return board_string
 	
-	def rel(self, dir, x,y):
-		"""
-		Returns the coordinates one square in a different direction to (x,y).
-		===DOCTESTS===
-		>>> board = Board()
-		>>> board.rel(NORTHWEST, (1,2))
-		(0,1)
-		>>> board.rel(SOUTHEAST, (3,4))
-		(4,5)
-		>>> board.rel(NORTHEAST, (3,6))
-		(4,5)
-		>>> board.rel(SOUTHWEST, (2,5))
-		(1,6)
-		"""
-		if dir == NORTHWEST:
-			return (x - 1, y - 1)
-		elif dir == NORTHEAST:
-			return (x + 1, y - 1)
-		elif dir == SOUTHWEST:
-			return (x - 1, y + 1)
-		elif dir == SOUTHEAST:
-			return (x + 1, y + 1)
-		else:
-			return 0
 
-	def checkForWin (self):
+
+	def check_win(self):
 		"""
 		Calls appropriate functions to check for horizontal, vertical, or
 		diagonal wins. Returns true if any of these return true
 		"""
 		
-		if (self.prototype_check()):
+		if (self.check_col_row_win()):
 			print("Horiz / Vertical win")
 			return True
 		if (self.check_diagional_win(self.positive_diagonals)):
@@ -273,11 +251,58 @@ class Board:
 			return True
 
 		return False
-		#self.checkHorizontalWin(red_pieces)
-		#self.checkVerticalWin(red_pieces)
-		#self.check_pos_diag_win(red_pieces)
-		#self.checkPositiveDiagonalWin(red_pieces)
-		#self.checkNegativeDiagonalWin(red_pieces)
+
+
+	def check_col_row_win(self):
+		"""
+		Iterates through occupied squares and counts the number of consecutive
+		same-colored squares. Returns true if it finds 4 or more consecutive
+		"""
+		currentColColor = None
+		consecutiveCol = 1
+		currentRowColor = None
+		consecutiveRow = 1
+
+		for x in range(8):
+			for y in range(8):
+				"""
+				Column Check
+				"""
+				if (self.is_occupied(x,y)):
+					if(currentColColor == self.matrix[x][y].occupant.color):
+						consecutiveCol += 1					
+
+					else:
+						currentColColor = self.matrix[x][y].occupant.color
+						consecutiveCol = 1
+						
+				else:
+					currentColColor = None
+					consecutiveCol = 1
+
+				if (consecutiveCol >= 4):
+					return True
+
+				"""
+				Row Check
+				"""
+				if (self.is_occupied(y,x)):
+					if(currentRowColor == self.matrix[y][x].occupant.color):
+						consecutiveRow += 1
+
+					else:
+						currentRowColor = self.matrix[y][x].occupant.color
+						consecutiveRow = 1
+
+				else:
+					currentRowColor = None
+					consecutiveRow = 1
+
+				if(consecutiveRow >= 4):
+					return True
+
+		return False
+
 
 	def check_diagional_win(self, diagonals):
 		"""
@@ -287,17 +312,17 @@ class Board:
 		currentColor = None
 		for diagonal in diagonals:
 			for coords in diagonal:
-				xCoord = coords[0]
-				yCoord = coords[1]
+				x = coords[0]
+				y = coords[1]
 
 
-				if(self.is_occupied(xCoord, yCoord)):
-					if(currentColor == self.matrix[xCoord][yCoord].occupant.color):	
+				if(self.is_occupied(x, y)):
+					if(currentColor == self.matrix[x][y].occupant.color):	
 						consecutive += 1
 
 
 					else:
-						currentColor = self.matrix[xCoord][yCoord].occupant.color
+						currentColor = self.matrix[x][y].occupant.color
 						consecutive = 1
 
 				else:
@@ -386,59 +411,6 @@ class Board:
 		else:
 			return False
 
-	def prototype_check(self):
-		"""
-		Iterates through occupied squares and counts the number of consecutive
-		same-colored squares. Returns true if it finds 4 or more consecutive
-		"""
-		currentColColor = None
-		consecutiveCol = 1
-		currentRowColor = None
-		consecutiveRow = 1
-
-		for x in range(8):
-			for y in range(8):
-				if (self.is_occupied(x,y)):
-					if(currentColColor == self.matrix[x][y].occupant.color):
-						consecutiveCol += 1					
-
-					else:
-						currentColColor = self.matrix[x][y].occupant.color
-						consecutiveCol = 1
-						
-				else:
-					currentColColor = None
-					consecutiveCol = 1
-
-				if (consecutiveCol >= 4):
-					return True
-
-				if (self.is_occupied(y,x)):
-					if(currentRowColor == self.matrix[y][x].occupant.color):
-						consecutiveRow += 1
-
-					else:
-						currentRowColor = self.matrix[y][x].occupant.color
-						consecutiveRow = 1
-
-				else:
-					currentRowColor = None
-					consecutiveRow = 1
-
-				if(consecutiveRow >= 4):
-					return True
-
-			
-		return False
-
-
-
-	def adjacent(self, x,y):
-		"""
-		Returns a list of squares locations that are adjacent (on a diagonal) to (x,y).
-		"""
-
-		return [self.rel(NORTHWEST, *(x,y)), self.rel(NORTHEAST, *(x,y)),self.rel(SOUTHWEST, *(x,y)),self.rel(SOUTHEAST, *(x,y))]
 
 	def location(self, x,y):
 		"""
