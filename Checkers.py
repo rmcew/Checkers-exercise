@@ -256,12 +256,20 @@ class Board:
 			return 0
 
 	def checkForWin (self):
-
-
-
+		"""
+		Calls appropriate functions to check for horizontal, vertical, or
+		diagonal wins. Returns true if any of these return true
+		"""
 		
-		if (self.prototype_check() or self.check_diagional_win(self.positive_diagonals) or self.check_diagional_win(self.negative_diagonals)):
-			print("True")
+		if (self.prototype_check()):
+			print("Horiz / Vertical win")
+			return True
+		if (self.check_diagional_win(self.positive_diagonals)):
+			print("Pos Diag Win")
+			return True
+
+		if (self.check_diagional_win(self.negative_diagonals)):
+			print("Neg Diag Win")
 			return True
 
 		return False
@@ -272,6 +280,9 @@ class Board:
 		#self.checkNegativeDiagonalWin(red_pieces)
 
 	def check_diagional_win(self, diagonals):
+		"""
+		Iterates through list of diagonals. Returns True if four consecutive diagonal tiles have the same color
+		"""
 		consecutive = 1
 		currentColor = None
 		for diagonal in diagonals:
@@ -281,7 +292,7 @@ class Board:
 
 
 				if(self.is_occupied(xCoord, yCoord)):
-					if(currentColor == self.matrix[xCoord][yCoord].occupant.color):
+					if(currentColor == self.matrix[xCoord][yCoord].occupant.color):	
 						consecutive += 1
 
 
@@ -300,18 +311,25 @@ class Board:
 
 
 	def is_occupied(self, x, y):
+		"""
+		Returns True if square at provided (x,y) coordinates is occupied
+		"""
+
 		if(self.matrix[x][y].occupant != None):
 			return True
 		return False
 
 	def get_pos_diagonals(self):
+		"""
+		Returns a list of positive diagonals separated into groups
+		"""
 		diagGroups = []
 
 		for y in range(3,8):
 			x = 0
 
 			currentGroup = []
-			while(self.has_adjacent_square(NORTHWEST, x, y)):
+			while(self.is_end_square(x, y) == False):
 				currentGroup.append((x,y))
 				x += 1
 				y -= 1
@@ -320,7 +338,7 @@ class Board:
 		for x in range(1,5):
 			y = 7
 			currentGroup = []
-			while(self.has_adjacent_square(NORTHWEST, x, y)):
+			while(self.is_end_square(x, y) == False):
 				currentGroup.append((x,y))
 				x += 1
 				y -= 1
@@ -330,23 +348,26 @@ class Board:
 		return diagGroups
 
 	def get_neg_diagonals(self):
+		"""
+		Returns a list of positive diagonals separated into groups
+		"""		
 		diagGroups = []
 
 		for y in range(0,4):
 			x = 0
 
 			currentGroup = []
-			while(self.has_adjacent_square(SOUTHWEST, x, y)):
+			while(self.is_end_square(x, y) == False):
 				currentGroup.append((x,y))
 				x += 1
 				y += 1
 
 			diagGroups.append((currentGroup))
 
-		for x in range(1,4):
+		for x in range(1,5):
 			y = 0
 			currentGroup = []
-			while(self.has_adjacent_square(SOUTHWEST, x, y)):
+			while(self.is_end_square(x, y) == False):
 				currentGroup.append((x,y))
 				x += 1
 				y += 1
@@ -355,14 +376,21 @@ class Board:
 		return diagGroups
 
 
-	def has_adjacent_square(self, direction, x, y):
+	def is_end_square(self, x, y):
+		"""
+		Returns true if the square at the provided (x,y) coordinates is on the edge of the board
+		"""
 		if((x < 0 or y < 0) or (x >= self.size[0] or y >= self.size[1])):
-			return False
-
-		else:
 			return True
 
+		else:
+			return False
+
 	def prototype_check(self):
+		"""
+		Iterates through occupied squares and counts the number of consecutive
+		same-colored squares. Returns true if it finds 4 or more consecutive
+		"""
 		currentColColor = None
 		consecutiveCol = 1
 		currentRowColor = None
@@ -370,7 +398,7 @@ class Board:
 
 		for x in range(8):
 			for y in range(8):
-				if (self.matrix[x][y].occupant != None):
+				if (self.is_occupied(x,y)):
 					if(currentColColor == self.matrix[x][y].occupant.color):
 						consecutiveCol += 1					
 
@@ -385,7 +413,7 @@ class Board:
 				if (consecutiveCol >= 4):
 					return True
 
-				if (self.matrix[y][x].occupant != None):
+				if (self.is_occupied(y,x)):
 					if(currentRowColor == self.matrix[y][x].occupant.color):
 						consecutiveRow += 1
 
@@ -441,32 +469,6 @@ class Board:
 
 		#self.remove_piece((start_x, start_y))
 
-	def has_piece(self, x, y):
-
-		if (hasattr(self.matrix[x][y].occupant, 'color')):
-			return True
-
-		else:
-			return False
-
-	def is_end_square(self, coords):
-		"""
-		Is passed a coordinate tuple (x,y), and returns true or 
-		false depending on if that square on the board is an end square.
-		===DOCTESTS===
-		>>> board = Board()
-		>>> board.is_end_square((2,7))
-		True
-		>>> board.is_end_square((5,0))
-		True
-		>>>board.is_end_square((0,5))
-		False
-		"""
-
-		if coords[1] == 0 or coords[1] == 7:
-			return True
-		else:
-			return False
 
 	def on_board(self, x,y):
 		"""
