@@ -1,7 +1,9 @@
 import Checkers
 import unittest
+import os
 
 
+os.environ["SDL_VIDEODRIVER"] = "dummy"
 
 class TestCheckers(unittest.TestCase):
 	def test_vertical_win(self):
@@ -12,7 +14,7 @@ class TestCheckers(unittest.TestCase):
 		gameTest.board.insert_piece(*(5,3), (255,   0,   0))
 		
 
-		res = gameTest.board.prototype_check()
+		res = gameTest.board.check_win()
 		#gameTest.main()
 		self.assertTrue(res)	
 
@@ -23,6 +25,8 @@ class TestCheckers(unittest.TestCase):
 		gameTest.board.insert_piece(*(4,5), (255,   0,   0))
 		gameTest.board.insert_piece(*(5,5), (255,   0,   0))
 
+		res = gameTest.board.check_win()
+		self.assertTrue(res)
 	#def test_pos_diagonal_win(self):
 		#gameTest = Checkers.Game():
 		#gameTest.board.insert_piece(*(0,3), (255,   0,   0))
@@ -41,7 +45,7 @@ class TestCheckers(unittest.TestCase):
 		gameTest.board.insert_piece(*(2,5), (255,   0,   0))
 
 
-		res = gameTest.board.prototype_check()
+		res = gameTest.board.check_win()
 		#gameTest.main()
 		self.assertFalse(res)	
 
