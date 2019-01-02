@@ -194,8 +194,9 @@ class Board:
 		self.matrix = self.new_board()
 		self.consecutive = 0
 		self.win = 4 # number of pieces required to win
-		self.positive_diagonals = self.pos_diagonal_list()
-		self.negative_diagonals = self.neg_diagonal_list()
+		self.size = (8,8)
+		self.positive_diagonals = self.get_pos_diagonals()
+		self.negative_diagonals = self.get_neg_diagonals()		
 		
 	def new_board(self):
 		"""
@@ -271,8 +272,8 @@ class Board:
 
 
 
-		self.check_diagonals()
-		if (self.prototype_check()):
+		
+		if (self.prototype_check() or self.check_diagional_win(self.positive_diagonals) or self.check_diagional_win(self.negative_diagonals)):
 			print("True")
 			return True
 
@@ -283,11 +284,96 @@ class Board:
 		#self.checkPositiveDiagonalWin(red_pieces)
 		#self.checkNegativeDiagonalWin(red_pieces)
 
-	def check_diagonals(self):
+	def check_diagional_win(self, diagonals):
 		consecutive = 1
-		occupantColor = None
-		for y in range (3,8):
-			print(self.adjacent(0, y)[1])
+		currentColor = None
+		for diagonal in diagonals:
+			for coords in diagonal:
+				xCoord = coords[0]
+				yCoord = coords[1]
+
+
+				if(self.is_occupied(xCoord, yCoord)):
+					if(currentColor == self.matrix[xCoord][yCoord].occupant.color):
+						consecutive += 1
+
+
+					else:
+						currentColor = self.matrix[xCoord][yCoord].occupant.color
+						consecutive = 1
+
+				else:
+					currentColor = None
+					consecutive = 1
+
+				if(consecutive >= 4):
+					return True
+
+		return False						
+
+
+	def is_occupied(self, x, y):
+		if(self.matrix[x][y].occupant != None):
+			return True
+		return False
+
+	def get_pos_diagonals(self):
+		diagGroups = []
+
+		for y in range(3,8):
+			x = 0
+
+			currentGroup = []
+			while(self.has_adjacent_square(NORTHWEST, x, y)):
+				currentGroup.append((x,y))
+				x += 1
+				y -= 1
+			diagGroups.append((currentGroup))
+
+		for x in range(1,5):
+			y = 7
+			currentGroup = []
+			while(self.has_adjacent_square(NORTHWEST, x, y)):
+				currentGroup.append((x,y))
+				x += 1
+				y -= 1
+
+			diagGroups.append((currentGroup))
+
+		return diagGroups
+
+	def get_neg_diagonals(self):
+		diagGroups = []
+
+		for y in range(0,4):
+			x = 0
+
+			currentGroup = []
+			while(self.has_adjacent_square(SOUTHWEST, x, y)):
+				currentGroup.append((x,y))
+				x += 1
+				y += 1
+
+			diagGroups.append((currentGroup))
+
+		for x in range(1,4):
+			y = 0
+			currentGroup = []
+			while(self.has_adjacent_square(SOUTHWEST, x, y)):
+				currentGroup.append((x,y))
+				x += 1
+				y += 1
+
+			diagGroups.append((currentGroup))
+		return diagGroups
+
+
+	def has_adjacent_square(self, direction, x, y):
+		if((x < 0 or y < 0) or (x >= self.size[0] or y >= self.size[1])):
+			return False
+
+		else:
+			return True
 
 	def prototype_check(self):
 		currentColColor = None
@@ -299,9 +385,11 @@ class Board:
 			for y in range(8):
 				if (self.matrix[x][y].occupant != None):
 					if(currentColColor == self.matrix[x][y].occupant.color):
-						consecutiveCol += 1
+						consecutiveCol += 1					
+
 					else:
 						currentColColor = self.matrix[x][y].occupant.color
+						consecutiveCol = 1
 						
 				else:
 					currentColColor = None
@@ -312,10 +400,11 @@ class Board:
 
 				if (self.matrix[y][x].occupant != None):
 					if(currentRowColor == self.matrix[y][x].occupant.color):
-
 						consecutiveRow += 1
+
 					else:
 						currentRowColor = self.matrix[y][x].occupant.color
+						consecutiveRow = 1
 
 				else:
 					currentRowColor = None
@@ -326,37 +415,6 @@ class Board:
 
 			
 		return False
-		
-
-	def pos_diagonal_list(self):	
-		diagGroups = []
-		diagGroups.append(((0,3), (1,2), (2,1), (3,0)))
-		diagGroups.append(((0,4), (1,3), (2,2), (3,1), (4,0)))
-		diagGroups.append(((0,5), (1,4), (2,3), (3,2), (4,1), (5,0)))
-		diagGroups.append(((0,6), (1,5), (2,4), (3,3), (4,2), (5,1), (6,0)))
-		diagGroups.append(((0,7), (1,6), (2,5), (3,4), (4,3), (5,2), (6,1), (7,0)))
-		diagGroups.append(((1,7), (2,6), (3,5), (4,4), (5,3), (6,2), (7,1)))
-		diagGroups.append(((2,7), (3,6), (4,5), (5,4), (6,3), (7,2)))
-		diagGroups.append(((3,7), (4,6), (5,5), (6,4), (7,3)))
-		diagGroups.append(((4,7), (5,6), (6,5), (7,4)))
-
-		return diagGroups
-
-	def neg_diagonal_list(self):
-		diagGroups = []
-		diagGroups.append(((7,3), (6,2), (5,1), (4,0)))
-		diagGroups.append(((7,4), (6,3), (5,2), (4,1), (3,0)))
-		diagGroups.append(((7,5), (6,4), (5,3), (4,2), (3,1), (2,0)))
-		diagGroups.append(((7,6), (6,5), (5,4), (4,3), (3,2), (2,1), (1,0)))
-		diagGroups.append(((7,7), (6,6), (5,5), (4,4), (3,3), (2,2), (1,1), (0,0)))
-		diagGroups.append(((6,7), (5,6), (4,5), (3,4), (2,3), (1,2), (0,1)))
-		diagGroups.append(((5,7), (4,6), (3,5), (2,4), (1,3), (0,2)))
-		diagGroups.append(((4,7), (3,6), (2,5), (1,4), (0,3)))
-		diagGroups.append(((3,7), (2,6), (1,5), (0,4)))
-		
-		return diagGroups
-
-
 
 
 

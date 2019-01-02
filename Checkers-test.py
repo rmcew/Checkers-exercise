@@ -22,6 +22,11 @@ class TestCheckers(unittest.TestCase):
 		gameTest.board.insert_piece(*(3,5), (255,   0,   0))
 		gameTest.board.insert_piece(*(4,5), (255,   0,   0))
 		gameTest.board.insert_piece(*(5,5), (255,   0,   0))
+
+	#def test_pos_diagonal_win(self):
+		#gameTest = Checkers.Game():
+		#gameTest.board.insert_piece(*(0,3), (255,   0,   0))
+
 		
 
 	def test_no_win(self):
