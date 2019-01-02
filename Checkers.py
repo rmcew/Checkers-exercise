@@ -1,23 +1,10 @@
 """
 checkers.py
-A simple checkers engine written in Python with the pygame 1.9.1 libraries.
-Here are the rules I am using: http://boardgames.about.com/cs/checkersdraughts/ht/play_checkers.htm
-I adapted some code from checkers.py found at 
-http://itgirl.dreamhosters.com/itgirlgames/games/Program%20Leaders/ClareR/Checkers/checkers.py starting on line 159 of my program.
-This is the final version of my checkers project for Programming Workshop at Marlboro College. The entire thing has been rafactored and made almost completely object oriented.
-Funcitonalities include:
-- Having the pieces and board drawn to the screen
-- The ability to move pieces by clicking on the piece you want to move, then clicking on the square you would
-  like to move to. You can change you mind about the piece you would like to move, just click on a new piece of yours.
-- Knowledge of what moves are legal. When moving pieces, you'll be limited to legal moves.
-- Capturing
-- DOUBLE capturing etc.
-- Legal move and captive piece highlighting
-- Turn changes
-- Automatic kinging and the ability for them to move backwords
-- Automatic check for and end game. 
-- A silky smoooth 60 FPS!
-Everest Witman - May 2014 - Marlboro College - Programming Workshop 
+A sandbox checkers board where you can place checkers anywhere and the program will check if there are 4 of the same colors in a row vertically, horizontally, or diagonally.
+I adapted some code from checkers.py found at:
+https://github.com/everestwitman/Pygame-Checkers/blob/master/checkers.py
+
+Ross McEwen - January 2019
 """
 
 import pygame, sys
