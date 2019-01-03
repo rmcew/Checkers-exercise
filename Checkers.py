@@ -65,20 +65,29 @@ class Game:
 				self.terminate_game()
 
 			if event.type == MOUSEBUTTONDOWN:
+				if(self.graphics.message):
+					self.graphics.message = False
 				if self.board.location(*self.mouse_pos).occupant == None:
 					self.board.insert_piece(*self.mouse_pos, self.piece_color)
-					self.board.check_win()
 					
+					if(self.board.check_win()):
+						if(self.piece_color == RED):
+							message_string = "RED Wins!"
+						elif(self.piece_color == BLACK):
+							message_string = "BLACK Wins!"
+						self.graphics.draw_message(message_string)
+										
 
 				else: 
 					self.board.remove_piece(*self.mouse_pos)
 
 			if event.type == KEYDOWN:
 				if event.key == pygame.K_b:
-					self.graphics.draw_message("blue")
-					self.piece_color = BLUE
+					self.graphics.draw_message("Black")
+					self.piece_color = BLACK
 					
 				if event.key == pygame.K_r:
+					self.graphics.draw_message("Red")
 					self.piece_color = RED
 
 
