@@ -9,10 +9,6 @@ Ross McEwen - January 2019
 
 import pygame, sys
 import math
-import time
-from itertools import groupby, chain
-from collections import defaultdict
-from operator import itemgetter
 from pygame.locals import *
 import unittest
 
@@ -44,7 +40,7 @@ class Game:
 		self.graphics = Graphics()
 		self.board = Board()
 		self.piece_color = RED
-		self.selected_piece = None # a board location. 
+		self.selected_piece = None 
 
 
 	def setup(self):
@@ -72,9 +68,9 @@ class Game:
 					
 					if(self.board.check_win()):
 						if(self.piece_color == RED):
-							message_string = "RED Wins!"
+							message_string = "Red Wins!"
 						elif(self.piece_color == BLACK):
-							message_string = "BLACK Wins!"
+							message_string = "Black Wins!"
 						self.graphics.draw_message(message_string)
 										
 
@@ -217,10 +213,6 @@ class Board:
 				elif (x % 2 == 0) and (y % 2 == 0): 
 					matrix[y][x] = Square(BLACK)
 
-		# initialize each square occupant to null
-
-
-
 		return matrix
 
 	def board_string(self, board):
@@ -317,9 +309,11 @@ class Board:
 		"""
 		Iterates through list of diagonals. Returns True if four consecutive diagonal tiles have the same color
 		"""
-		consecutive = 1
-		currentColor = None
+
+
 		for diagonal in diagonals:
+			consecutive = 1
+			currentColor = None			
 			for coords in diagonal:
 				x = coords[0]
 				y = coords[1]
@@ -328,6 +322,7 @@ class Board:
 				if(self.is_occupied(x, y)):
 					if(currentColor == self.matrix[x][y].occupant.color):	
 						consecutive += 1
+						print(currentColor, consecutive)
 
 
 					else:
@@ -448,8 +443,6 @@ class Board:
 		"""
 		self.matrix[math.floor(x)][math.floor(y)].occupant = Piece(piece_color)
 
-		#self.remove_piece((start_x, start_y))
-
 
 	def on_board(self, x,y):
 		"""
@@ -472,14 +465,13 @@ class Board:
 
 
 class Piece:
-	def __init__(self, color, king = False):
+	def __init__(self, color):
 		self.color = color
-		self.king = king
-
+		
 class Square:
 	def __init__(self, color, occupant = None):
 		self.color = color # color is either BLACK or WHITE
-		self.occupant = occupant # occupant is a Square object
+		self.occupant = occupant # occupant is a Piece object
 
 def main():
 	game = Game()
