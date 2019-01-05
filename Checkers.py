@@ -36,6 +36,7 @@ class Game:
 		self.board = Board()
 		self.piece_color = RED
 		self.selected_piece = None 
+		self.game_won = False
 
 
 	def setup(self):
@@ -47,6 +48,7 @@ class Game:
 		self.board = Board()
 		self.piece_color = RED
 		self.selected_piece = None 
+		self.game_won = False
 
 	def event_loop(self):
 		"""
@@ -62,6 +64,10 @@ class Game:
 				self.terminate_game()
 
 			if event.type == MOUSEBUTTONDOWN:
+				if (self.game_won):
+					self.reset()
+					continue
+
 				if(self.graphics.message):
 					self.graphics.message = False
 				if self.board.location(*self.mouse_pos).occupant == None:
@@ -69,10 +75,11 @@ class Game:
 					
 					if(self.board.check_win()):
 						if(self.piece_color == RED):
-							message_string = "Red Wins!"
-							self.reset()
+							message_string = "Red Wins! Click to reset"
 						elif(self.piece_color == BLACK):
-							message_string = "Black Wins!"
+							message_string = "Black Wins! Click to reset"
+						
+						self.game_won = True
 						self.graphics.draw_message(message_string)
 										
 
