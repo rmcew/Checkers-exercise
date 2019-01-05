@@ -3,7 +3,7 @@ import unittest
 import os
 
 
-os.environ["SDL_VIDEODRIVER"] = "dummy"
+os.environ["SDL_VIDEODRIVER"] = "dummy"	#creates dummy video driver so automated testing can be done
 
 class TestCheckers(unittest.TestCase):
 	def test_vertical_win(self):

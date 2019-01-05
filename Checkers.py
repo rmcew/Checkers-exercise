@@ -25,11 +25,6 @@ HIGH     = (160, 190, 255)
 
 NONE = '.'
 
-##DIRECTIONS##
-NORTHWEST = "northwest"
-NORTHEAST = "northeast"
-SOUTHWEST = "southwest"
-SOUTHEAST = "southeast"
 
 class Game:
 	"""
@@ -46,6 +41,12 @@ class Game:
 	def setup(self):
 		"""Draws the window and board at the beginning of the game"""
 		self.graphics.setup_window()
+
+	def reset(self):
+		self.graphics = Graphics()
+		self.board = Board()
+		self.piece_color = RED
+		self.selected_piece = None 
 
 	def event_loop(self):
 		"""
@@ -69,6 +70,7 @@ class Game:
 					if(self.board.check_win()):
 						if(self.piece_color == RED):
 							message_string = "Red Wins!"
+							self.reset()
 						elif(self.piece_color == BLACK):
 							message_string = "Black Wins!"
 						self.graphics.draw_message(message_string)
@@ -110,7 +112,7 @@ class Game:
 class Graphics:
 	def __init__(self):
 		self.caption = "Checkers"
-		self.fps = 60
+		self.fps = 30
 		self.clock = pygame.time.Clock()
 		self.window_size = 600
 		self.screen = pygame.display.set_mode((self.window_size, self.window_size))
@@ -241,14 +243,10 @@ class Board:
 		"""
 		
 		if (self.check_col_row_win()):
-			print("Horiz / Vertical win")
 			return True
-		if (self.check_diagional_win(self.positive_diagonals)):
-			print("Pos Diag Win")
+		elif (self.check_diagional_win(self.positive_diagonals)):
 			return True
-
-		if (self.check_diagional_win(self.negative_diagonals)):
-			print("Neg Diag Win")
+		elif (self.check_diagional_win(self.negative_diagonals)):
 			return True
 
 		return False
@@ -257,19 +255,21 @@ class Board:
 	def check_col_row_win(self):
 		"""
 		Iterates through occupied squares and counts the number of consecutive
-		same-colored squares. Returns true if it finds 4 or more consecutive
+		same-colored squares. Returns true if it finds 4 or more consecutive in 
+		a single row or column
 		"""
-		currentColColor = None
-		consecutiveCol = 1
-		currentRowColor = None
-		consecutiveRow = 1
 
 		for x in range(8):
+			currentRowColor = None
+			consecutiveRow = 1			
+			currentColColor = None
+			consecutiveCol = 1					
 			for y in range(8):
+		
 				"""
 				Column Check
 				"""
-				if (self.is_occupied(x,y)):
+				if (self.matrix[x][y].is_occupied()):
 					if(currentColColor == self.matrix[x][y].occupant.color):
 						consecutiveCol += 1					
 
@@ -287,7 +287,7 @@ class Board:
 				"""
 				Row Check
 				"""
-				if (self.is_occupied(y,x)):
+				if (self.matrix[y][x].is_occupied()):
 					if(currentRowColor == self.matrix[y][x].occupant.color):
 						consecutiveRow += 1
 
@@ -319,11 +319,9 @@ class Board:
 				y = coords[1]
 
 
-				if(self.is_occupied(x, y)):
+				if(self.matrix[x][y].is_occupied()):
 					if(currentColor == self.matrix[x][y].occupant.color):	
 						consecutive += 1
-						print(currentColor, consecutive)
-
 
 					else:
 						currentColor = self.matrix[x][y].occupant.color
@@ -338,15 +336,6 @@ class Board:
 
 		return False						
 
-
-	def is_occupied(self, x, y):
-		"""
-		Returns True if square at provided (x,y) coordinates is occupied
-		"""
-
-		if(self.matrix[x][y].occupant != None):
-			return True
-		return False
 
 	def get_pos_diagonals(self):
 		"""
@@ -473,6 +462,19 @@ class Square:
 		self.color = color # color is either BLACK or WHITE
 		self.occupant = occupant # occupant is a Piece object
 
+
+	def is_occupied(self):
+		"""
+		Returns True if square at provided (x,y) coordinates is occupied
+		"""
+
+		if(self.occupant == None):
+			return False
+
+		return True
+
+
+
 def main():
 	game = Game()
 	game.main()
@@ -481,6 +483,5 @@ def main():
 
 if __name__ == "__main__":
 	main()
-	unittest.main()
 
 
