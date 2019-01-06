@@ -422,13 +422,6 @@ class Board:
 		"""
 		self.matrix[x][y].occupant = None
 
-	def move_piece(self, start_x, start_y, end_x, end_y):
-		"""
-		Move a piece from (start_x, start_y) to (end_x, end_y).
-		"""
-
-		self.matrix[end_x][end_y].occupant = self.matrix[start_x][start_y].occupant
-		self.remove_piece((start_x, start_y))
 
 	def insert_piece(self, x, y, piece_color):
 		"""

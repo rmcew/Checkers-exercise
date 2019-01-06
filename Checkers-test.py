@@ -72,6 +72,7 @@ class TestCheckers(unittest.TestCase):
 		__class__.gameTest.board.insert_piece(*(6,1), (255,   0,   0))
 		__class__.gameTest.board.insert_piece(*(1,6), (255,   0,   0))
 		__class__.gameTest.board.insert_piece(*(4,7), (255,   0,   0))
+		__class__.gameTest.board.insert_piece(*(2,3), (255,   0,   0))
 		__class__.gameTest.board.insert_piece(*(5,7), (255,   0,   0))
 		__class__.gameTest.board.insert_piece(*(6,7), (255,   0,   0))
 		__class__.gameTest.board.insert_piece(*(4,6), (255,   0,   0))
@@ -128,6 +129,10 @@ class TestCheckers(unittest.TestCase):
 		res = __class__.gameTest.board.check_win()
 		#__class__.gameTest.main()
 
+		self.assertFalse(res)
+
+	def test_no_pieces(self):
+		res = __class__.gameTest.board.check_win()
 		self.assertFalse(res)
 
 
