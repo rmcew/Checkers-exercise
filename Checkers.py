@@ -35,7 +35,6 @@ class Game:
 		self.graphics = Graphics()
 		self.board = Board()
 		self.piece_color = RED
-		self.selected_piece = None 
 		self.game_won = False
 
 
@@ -47,7 +46,6 @@ class Game:
 		self.graphics = Graphics()
 		self.board = Board()
 		self.piece_color = RED
-		self.selected_piece = None 
 		self.game_won = False
 
 	def event_loop(self):
@@ -99,7 +97,7 @@ class Game:
 
 	def update(self):
 		"""Calls on the graphics class to update the game display."""
-		self.graphics.update_display(self.board, self.selected_piece)
+		self.graphics.update_display(self.board)
 
 	def terminate_game(self):
 		"""Quits the program and ends the game."""
@@ -135,7 +133,7 @@ class Graphics:
 		pygame.init()
 		pygame.display.set_caption(self.caption)
 
-	def update_display(self, board, selected_piece):
+	def update_display(self, board):
 		"""
 		This updates the current display.
 		"""
@@ -196,7 +194,6 @@ class Board:
 		self.matrix = self.new_board()
 		self.consecutive = 0
 		self.win = 4 # number of pieces required to win
-		self.size = (8,8)
 		self.positive_diagonals = self.get_pos_diagonals()
 		self.negative_diagonals = self.get_neg_diagonals()		
 		
@@ -405,7 +402,7 @@ class Board:
 		"""
 		Returns true if the square at the provided (x,y) coordinates is on the edge of the board
 		"""
-		if((x < 0 or y < 0) or (x >= self.size[0] or y >= self.size[1])):
+		if((x < 0 or y < 0) or (x >= 8 or y >= 8)):
 			return True
 
 		else:
