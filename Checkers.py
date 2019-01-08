@@ -471,11 +471,9 @@ class Square:
 		return True
 
 
-
 def main():
 	game = Game()
 	game.main()
-
 
 
 if __name__ == "__main__":

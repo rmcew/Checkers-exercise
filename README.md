@@ -32,23 +32,23 @@ pip install pygame
 Clone / download and unzip Checkers-exercise and cd in to the folder containing checkers.py. Run the game
 
 ```
-python checkers.py
+python Checkers.py
 ```
 
-**Note:**This assumes you have python in your environment path
+**Note: This assumes you have python in your environment path**
 
 ## Running the tests
 
 To run the test, run checkers-test.py
 
 ```
-python checkers-test.py
+python Checkers-test.py
 ```
 
 
 ## Built With
 
-* [Pygame](https://www.pygame.org) - Pygame
+* [Pygame](https://www.pygame.org)
 
 ## Authors
 
