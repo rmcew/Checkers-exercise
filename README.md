@@ -23,7 +23,7 @@ Download Python from https://www.python.org/downloads/
 
 ### Installing
 
-Download / install Python 3 from the link above. Then install pygame using pip
+Install pygame using pip
 
 ```
 pip install pygame
@@ -40,8 +40,7 @@ python Checkers.py
 All wins will be saved to wins.csv
 
 ## Running the tests
-
-To run the automated tests, run checkers-test.py
+To run automated tests, run Checkers-test.py
 
 ```
 python Checkers-test.py
