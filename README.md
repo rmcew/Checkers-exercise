@@ -23,7 +23,7 @@ Download Python from https://www.python.org/downloads/
 
 ### Installing
 
-Download / install Python 3 from the link below. Then install pygame using pip
+Install pygame using pip
 
 ```
 pip install pygame
