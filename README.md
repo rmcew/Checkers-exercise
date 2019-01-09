@@ -37,9 +37,11 @@ python Checkers.py
 
 **Note: This assumes you have python in your environment path**
 
+All wins will be saved to wins.csv
+
 ## Running the tests
 
-To run the test, run checkers-test.py
+To run the automated tests, run checkers-test.py
 
 ```
 python Checkers-test.py

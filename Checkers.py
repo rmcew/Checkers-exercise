@@ -7,24 +7,22 @@ https://github.com/everestwitman/Pygame-Checkers/blob/master/checkers.py
 Ross McEwen - January 2019
 """
 
-import pygame, sys
-import math
+import pygame, sys, math, unittest, csv
+import pygame.freetype
 from pygame.locals import *
-import unittest
 
 pygame.font.init()
 
 ##COLORS##
 #             R    G    B 
 WHITE    = (255, 255, 255)
-BLUE     = (  0,   0, 255)
 RED      = (255,   0,   0)
 BLACK    = (  0,   0,   0)
-GOLD     = (255, 215,   0)
 HIGH     = (160, 190, 255)
 
 NONE = '.'
 
+MY_FONT = pygame.font.SysFont('Comic Sans MS', 30)
 
 class Game:
 	"""
@@ -63,11 +61,13 @@ class Game:
 
 			if event.type == MOUSEBUTTONDOWN:
 				if (self.game_won):
+					self.log_win(self.piece_color)
 					self.reset()
 					continue
 
 				if(self.graphics.message):
 					self.graphics.message = False
+
 				if self.board.location(*self.mouse_pos).occupant == None:
 					self.board.insert_piece(*self.mouse_pos, self.piece_color)
 					
@@ -104,14 +104,26 @@ class Game:
 		pygame.quit()
 		sys.exit
 
+	def log_win(self, color):
+		file = open('wins.csv', 'a')
+		if (color == RED):
+			file.write("Red\n")
+		elif(color == BLACK):
+			file.write("Black\n")
+
+		file.close()
+
 	def main(self):
 		""""This executes the game and controls its flow."""
 		self.setup()
 
 		while True: # main game loop
-			self.event_loop()
-			self.update()
-
+			try:
+				self.event_loop()
+				self.update()
+			except pygame.error:
+				print("Game exited")
+				break
 
 
 class Graphics:
@@ -125,6 +137,8 @@ class Graphics:
 		self.square_size = self.window_size / 8
 		self.piece_size = self.square_size / 2
 		self.message = False
+
+		self.draw_instructions()
 
 	def setup_window(self):
 		"""
@@ -155,6 +169,20 @@ class Graphics:
 			for y in range(8):
 				pygame.draw.rect(self.screen, board[x][y].color, (x * self.square_size, y * self.square_size, self.square_size, self.square_size), )
 	
+	def draw_instructions(self):
+		basicfont = pygame.font.SysFont(None, 48)
+		text = basicfont.render('Hello World!', True, (255, 0, 0), (255, 255, 255))
+		textrect = text.get_rect()
+		textrect.centerx = self.screen.get_rect().centerx
+		textrect.centery = self.screen.get_rect().centery
+		 
+		self.screen.fill((255, 255, 255))
+		self.screen.blit(text, textrect)
+
+	    
+
+	    
+
 	def draw_board_pieces(self, board):
 		"""
 		Takes a board object and draws all of its pieces to the display
@@ -371,7 +399,7 @@ class Board:
 
 	def get_neg_diagonals(self):
 		"""
-		Returns a list of positive diagonals separated into groups
+		Returns a list of negative diagonals separated into groups
 		"""		
 		diagGroups = []
 
@@ -470,8 +498,59 @@ class Square:
 
 		return True
 
+def instructions():
+	pygame.init()
+	size = [600, 600]
+	screen = pygame.display.set_mode(size)
+	pygame.display.set_caption("Instructions")
+	done = False
+	clock = pygame.time.Clock()
+
+	rect_x = 50
+	rect_y = 50
+
+	rect_change_x = 5
+	rect_change_y = 5
+	 
+	font = pygame.font.Font(None, 36)
+	 
+	display_instructions = True
+	instruction_page = 1
+
+	while not done:
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				done = True
+
+			if event.type == pygame.MOUSEBUTTONDOWN:
+				done = True
+
+			screen.fill(BLACK)
+
+			text = font.render("Instructions: ", True, WHITE)
+			screen.blit(text, [10, 10])			
+			text = font.render("*Press 'B' to toggle Black Pieces", True, WHITE)
+			screen.blit(text, [10, 40])
+			text = font.render("*Press 'R' to toggle Red Pieces", True, WHITE)
+			screen.blit(text, [10, 70])
+			text = font.render("*Click anywhere on the board to place a piece", True, WHITE)
+			screen.blit(text, [10, 100])			
+			text = font.render("*Click an existing piece to remove it", True, WHITE)
+			screen.blit(text, [10, 130])
+			text = font.render("*Game ends automatically when four", True, WHITE)
+			screen.blit(text, [10, 160])
+			text = font.render("  consecutive same-colored pieces are found", True, WHITE)
+			screen.blit(text, [10, 190])
+			text = font.render("Click anywhere to begin!", True, WHITE)
+			screen.blit(text, [150, 300])
+
+
+			clock.tick(60)
+			pygame.display.flip()
+
 
 def main():
+	instructions()
 	game = Game()
 	game.main()
 
