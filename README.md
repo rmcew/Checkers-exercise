@@ -39,7 +39,7 @@ python Checkers.py
 
 ## Running the tests
 
-To run the test, run checkers-test.py
+To run automated tests, run Checkers-test.py
 
 ```
 python Checkers-test.py
