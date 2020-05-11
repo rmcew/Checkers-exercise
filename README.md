@@ -62,3 +62,5 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 ## Acknowledgments
 
 checkers.py was taken from https://github.com/everestwitman/Pygame-Checkers/blob/master/checkers.py and heavily adapted to suit this project's requirements
+
+changing
